@@ -1,0 +1,282 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\rmjwiww\OneDrive - University College London\Home\Design\C
+> OIN-UP\commentary\samplesize calcs for supplement.log
+  log type:  text
+ opened on:   2 Jul 2026, 14:43:09
+
+. /*
+> Comparing Interventions Used in Practice: Supplemental material
+> samplesize calcs for supplement.do
+> Stata program to calculate sample size for Table 1
+> requires: bayesSS.ado (also supplied)
+> IW 8/10/2024
+> */
+. 
+. 
+. 
+. 
+. //// Set up
+> ssc install artbin // if needed
+checking artbin consistency and verifying not already installed...
+all files already exist and are up to date.
+
+. * install bayesSS
+. 
+. 
+. //// Standard approaches
+> 
+. // Superiority of either of NACRT or NACT over the other
+. // 90% power for superiority
+. // Assumes benefit of better treatment = 5%
+. artbin, pr(.5 .55) power(.9) alpha(.05)
+
+ART - ANALYSIS OF RESOURCES FOR TRIALS (binary version 2.1.0 04jan2024)
+------------------------------------------------------------------------------
+A sample size program by Abdel Babiker, Patrick Royston, Friederike Barthel, 
+Ella Marley-Zagar and Ian White
+MRC Clinical Trials Unit at UCL, London WC1V 6LJ, UK.
+------------------------------------------------------------------------------
+Type of trial                          superiority
+Number of groups                       2
+Favourable/unfavourable outcome        favourable
+                                       Inferred by the program
+Allocation ratio                       equal group sizes
+Statistical test assumed               unconditional comparison of 2
+                                        binomial proportions
+                                        using the score test
+Local or distant                       distant
+Continuity correction                  no
+
+Anticipated event probabilities        0.500  0.550 
+
+Alpha                                  0.050 (two-sided)
+                                        (taken as .025 one-sided)
+Power (designed)                       0.900
+
+Total sample size (calculated)         4190
+
+Sample size per group (calculated)     2095 2095
+Expected total number of events        2199.75
+Expected number of events per group    1047.5 1152.25
+------------------------------------------------------------------------------
+
+. 
+. // Superiority of NACRT over NACT: 90% power for superiority. 
+. // Assumes NACRT benefit = 5% and 50% 3-year DFS 
+. 
+. artbin, pr(.5 .55) power(.9) alpha(.05) onesided
+
+ART - ANALYSIS OF RESOURCES FOR TRIALS (binary version 2.1.0 04jan2024)
+------------------------------------------------------------------------------
+A sample size program by Abdel Babiker, Patrick Royston, Friederike Barthel, 
+Ella Marley-Zagar and Ian White
+MRC Clinical Trials Unit at UCL, London WC1V 6LJ, UK.
+------------------------------------------------------------------------------
+Type of trial                          superiority
+Number of groups                       2
+Favourable/unfavourable outcome        favourable
+                                       Inferred by the program
+Allocation ratio                       equal group sizes
+Statistical test assumed               unconditional comparison of 2
+                                        binomial proportions
+                                        using the score test
+Local or distant                       distant
+Continuity correction                  no
+
+Anticipated event probabilities        0.500  0.550 
+
+Alpha                                  0.050 (one-sided)
+Power (designed)                       0.900
+
+Total sample size (calculated)         3414
+
+Sample size per group (calculated)     1707 1707
+Expected total number of events        1792.35
+Expected number of events per group    853.5 938.85
+------------------------------------------------------------------------------
+
+. 
+. // Non-inferiority of NACT to NACRT. 
+. // 90% power for non-inferiority
+. // Assumes treatments equal and NI margin = 5%
+. artbin, pr(.5 .5) power(.9) margin(-.05) onesided
+
+ART - ANALYSIS OF RESOURCES FOR TRIALS (binary version 2.1.0 04jan2024)
+------------------------------------------------------------------------------
+A sample size program by Abdel Babiker, Patrick Royston, Friederike Barthel, 
+Ella Marley-Zagar and Ian White
+MRC Clinical Trials Unit at UCL, London WC1V 6LJ, UK.
+------------------------------------------------------------------------------
+Type of trial                          non-inferiority
+Number of groups                       2
+Favourable/unfavourable outcome        favourable
+                                       Inferred by the program
+Allocation ratio                       equal group sizes
+Statistical test assumed               unconditional comparison of 2
+                                        binomial proportions
+                                        using the score test
+Local or distant                       distant
+Continuity correction                  no
+Null hypothesis                        H0: pi2 - pi1 <= -.05
+Alternative hypothesis                 H1: pi2 - pi1 > -.05
+
+Anticipated event probabilities        0.500  0.500 
+
+Alpha                                  0.050 (one-sided)
+Power (designed)                       0.900
+
+Total sample size (calculated)         3422
+
+Sample size per group (calculated)     1711 1711
+Expected total number of events        1711
+Expected number of events per group    855.5 855.5
+------------------------------------------------------------------------------
+
+. 
+. 
+. 
+. 
+. //// Novel approaches
+> 
+. // Frequentist
+. // 90% power for p<0.2  
+. artbin, pr(.5 .55) power(.9) alpha(.2)
+
+ART - ANALYSIS OF RESOURCES FOR TRIALS (binary version 2.1.0 04jan2024)
+------------------------------------------------------------------------------
+A sample size program by Abdel Babiker, Patrick Royston, Friederike Barthel, 
+Ella Marley-Zagar and Ian White
+MRC Clinical Trials Unit at UCL, London WC1V 6LJ, UK.
+------------------------------------------------------------------------------
+Type of trial                          superiority
+Number of groups                       2
+Favourable/unfavourable outcome        favourable
+                                       Inferred by the program
+Allocation ratio                       equal group sizes
+Statistical test assumed               unconditional comparison of 2
+                                        binomial proportions
+                                        using the score test
+Local or distant                       distant
+Continuity correction                  no
+
+Anticipated event probabilities        0.500  0.550 
+
+Alpha                                  0.200 (two-sided)
+                                        (taken as .1 one-sided)
+Power (designed)                       0.900
+
+Total sample size (calculated)         2618
+
+Sample size per group (calculated)     1309 1309
+Expected total number of events        1374.45
+Expected number of events per group    654.5 719.95
+------------------------------------------------------------------------------
+
+. 
+. artbin, pr(.5 .55) power(.9) alpha(.4) 
+
+ART - ANALYSIS OF RESOURCES FOR TRIALS (binary version 2.1.0 04jan2024)
+------------------------------------------------------------------------------
+A sample size program by Abdel Babiker, Patrick Royston, Friederike Barthel, 
+Ella Marley-Zagar and Ian White
+MRC Clinical Trials Unit at UCL, London WC1V 6LJ, UK.
+------------------------------------------------------------------------------
+Type of trial                          superiority
+Number of groups                       2
+Favourable/unfavourable outcome        favourable
+                                       Inferred by the program
+Allocation ratio                       equal group sizes
+Statistical test assumed               unconditional comparison of 2
+                                        binomial proportions
+                                        using the score test
+Local or distant                       distant
+Continuity correction                  no
+
+Anticipated event probabilities        0.500  0.550 
+
+Alpha                                  0.400 (two-sided)
+                                        (taken as .2 one-sided)
+Power (designed)                       0.900
+
+Total sample size (calculated)         1796
+
+Sample size per group (calculated)     898 898
+Expected total number of events        942.9
+Expected number of events per group    449 493.9
+------------------------------------------------------------------------------
+
+. 
+. 
+. // Bayesian design      
+. // 90% power for 80-20 evidence
+. // Assumes benefit of better treatment = 5%
+. bayesSS, n1(890) n2(890) priormeand1(.5) priormeand2(.55) reps(1000000) ///
+>         seed(3) nofreq nograph criteria(.80) 
+Criterion                                 Value      95% Monte Carlo intl
+Mean post. prob. of benefit               .93249271  .93226032  .9327251
+Power for post. prob. of benefit > .8     .900169    .89957979  .90075589  
+
+. 
+. // Expected 80-20 evidence
+. // Assumes benefit of better treatment = 5%
+. bayesSS, n1(282) n2(282) priormeand1(.5) priormeand2(.55) reps(1000000) ///
+>         seed(3) nofreq nograph
+Criterion                                 Value      95% Monte Carlo intl
+Mean post. prob. of benefit               .80024969  .79982339  .80067599
+Power for post. prob. of benefit > 0.975  .21544     .21463453  .21624712  
+Power for post. prob. of benefit > 0.8    .650533    .64959755  .65146758  
+
+. 
+. 
+. // Decision-based approach
+. /* Explanation: a trial with two-sided alpha=1 always declares statistical 
+> significance in favour of the arm with better mean outcome, so power is the 
+> same as probability of declaring the better treatment to be better. Let 
+> probabilities of good outcome be p1 and p2 where p1<p2. The current 
+> probability of good outcome is taken as (p1+p2)/2. After the trial, expected 
+> probability of good outcome is power*p2 + (1-power)*p1. Scaling the current 
+> probability (p1+p2)/2 as 0 and the best possible probability p2 as 1, the 
+> post-trial expected probability equates to 2*power-1.
+> */
+. // Expected health benefit is 80% of possible health benefit
+. artbin, pr(.5 .55) power(.9) alpha(.5) onesided
+
+ART - ANALYSIS OF RESOURCES FOR TRIALS (binary version 2.1.0 04jan2024)
+------------------------------------------------------------------------------
+A sample size program by Abdel Babiker, Patrick Royston, Friederike Barthel, 
+Ella Marley-Zagar and Ian White
+MRC Clinical Trials Unit at UCL, London WC1V 6LJ, UK.
+------------------------------------------------------------------------------
+Type of trial                          superiority
+Number of groups                       2
+Favourable/unfavourable outcome        favourable
+                                       Inferred by the program
+Allocation ratio                       equal group sizes
+Statistical test assumed               unconditional comparison of 2
+                                        binomial proportions
+                                        using the score test
+Local or distant                       distant
+Continuity correction                  no
+
+Anticipated event probabilities        0.500  0.550 
+
+Alpha                                  0.500 (one-sided)
+Power (designed)                       0.900
+
+Total sample size (calculated)         654
+
+Sample size per group (calculated)     327 327
+Expected total number of events        343.35
+Expected number of events per group    163.5 179.85
+------------------------------------------------------------------------------
+
+. 
+. 
+end of do-file
+      name:  <unnamed>
+       log:  C:\Users\rmjwiww\OneDrive - University College London\Home\Design\C
+> OIN-UP\commentary\samplesize calcs for supplement.log
+  log type:  text
+ closed on:   2 Jul 2026, 14:43:12
+--------------------------------------------------------------------------------

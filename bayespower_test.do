@@ -1,0 +1,54 @@
+/*
+bayespower_test.do
+Apply bayespower to Bayesian power examples in Becky's paper
+IW 3jul2026
+*/
+
+prog drop _all
+
+* like frequentist: n=310/arm
+bayespower, n1(310) n0(310) ///
+	a1d(6600) b1d(30200) a0d(6600) b0d(30200) ///
+	a1a(1) b1a(1) a0a(1) b0a(1) ///
+	delta(.1) crit(.975) nopreserve nograph format(%6.3f)
+assert abs(r(PPB_975) - 0.9) < 0.01
+* expect power = 90%
+
+* prior SD = 0.2: n=310/arm
+bayespower, n1(310) n0(310) ///
+	a1d(66) b1d(302) a0d(66) b0d(302) ///
+	a1a(1) b1a(1) a0a(1) b0a(1) ///
+	delta(.1) nograph crit(.975)
+assert abs(r(PPB_975) - 0.83) < 0.01
+* expect power = 83%
+
+* prior SD = 0.2: n=440/arm
+bayespower, n1(440) n0(440) ///
+	a1d(66) b1d(302) a0d(66) b0d(302) ///
+	a1a(1) b1a(1) a0a(1) b0a(1) ///
+	delta(.1) nograph crit(.975)
+assert abs(r(PPB_975) - 0.9) < 0.01
+* expect power = 90%
+
+* "enthusiastic" analysis priors Be(11,48)
+bayespower, n1(310) n0(310) ///
+	a1d(66) b1d(302) a0d(66) b0d(302) ///
+	a1a(11) b1a(48) a0a(11) b0a(48) ///
+	delta(.1) nograph crit(.975)
+assert abs(r(PPB_975) - 0.9) < 0.01
+* expect power = 90%
+
+* "sceptical" analysis priors Be(11,48)
+bayespower, n1(310) n0(310) ///
+	a1d(66) b1d(302) a0d(66) b0d(302) ///
+	a1a(141) b1a(362) a0a(66) b0a(302) ///
+	delta(.1) nograph crit(.975)
+assert abs(r(PPB_975) - 0.41) < 0.01
+* expect power = 41%
+
+bayespower, n1(760) n0(760) ///
+	a1d(66) b1d(302) a0d(66) b0d(302) ///
+	a1a(141) b1a(362) a0a(66) b0a(302) ///
+	delta(.1) crit(.975) graph(name(post1, replace))
+assert abs(r(PPB_975) - 0.9) < 0.01
+* expect power = 90%
