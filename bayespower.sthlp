@@ -1,21 +1,20 @@
 {smcl}
-{* *! version 1.0  2 Jul 2026}{...}
+{* *! version 0.5  3jul2026}{...}
 {vieweralsosee "" "--"}{...}
-{vieweralsosee "Install command2" "ssc install command2"}{...}
-{vieweralsosee "Help command2 (if installed)" "help command2"}{...}
-{viewerjumpto "Syntax" "bayesSS##syntax"}{...}
-{viewerjumpto "Description" "bayesSS##description"}{...}
-{viewerjumpto "Options" "bayesSS##options"}{...}
-{viewerjumpto "Remarks" "bayesSS##remarks"}{...}
-{viewerjumpto "Examples" "bayesSS##examples"}{...}
+{vieweralsosee "Help artbin (if installed)" "help artbin"}{...}
+{viewerjumpto "Syntax" "bayespower##syntax"}{...}
+{viewerjumpto "Description" "bayespower##description"}{...}
+{viewerjumpto "Options" "bayespower##options"}{...}
+{viewerjumpto "Remarks" "bayespower##remarks"}{...}
+{viewerjumpto "Examples" "bayespower##examples"}{...}
 {title:Title}
 {phang}
-{bf:bayesSS} {hline 2} Power calculation for a Bayesian analysis with a binary outcome
+{bf:bayespower} {hline 2} Power calculation for a Bayesian analysis with a binary outcome
 
 {marker syntax}{...}
 {title:Syntax}
 {p 8 17 2}
-{cmdab:bayesSS}
+{cmdab:bayespower}
 [{cmd:,}
 {it:options}]
 
@@ -23,28 +22,22 @@
 {synopthdr}
 {synoptline}
 
-{syntab:Required}
+{syntab:Sampe sizes (required)}
 {synopt:{opt n1(#)}} Sample size in group 1
 
 {synopt:{opt n2(#)}} Sample size in group 0
 
-{syntab:Options specifying the priors}
+{syntab:Options specifying the priors (required)}
 
-{synopt:{opt a1d(#)}} "a" value in the design prior pi1~Beta(a,b) for the true probability in group 1. Default value is 0.
+{synopt:{opt priorspec(ab|ms)}} Whether the beta priors Beta(a,b) below are specified via their alpha and beta parameters (ab) or via their mean and standard deviation (ms).
 
-{synopt:{opt b1d(#)}} "b" value in the design prior pi1~Beta(a,b) for the true probability in group 1. Default value is 0.
+{synopt:{opt prior1d(# #)}} Design prior pi1~Beta(a,b) for the true probability in group 1. 
 
-{synopt:{opt a1d(#)}} "a" value in the design prior pi0~Beta(a,b) for the true probability in group 0. Default value is 0.
+{synopt:{opt prior0d(# #)}} Design prior pi0~Beta(a,b) for the true probability in group 0. 
 
-{synopt:{opt b1d(#)}} "b" value in the design prior pi0~Beta(a,b) for the true probability in group 0. Default value is 0.
+{synopt:{opt prior1a(# #)}} Analysis prior pi1~Beta(a,b) for the true probability in group 1. 
 
-{synopt:{opt a1a(#)}} "a" value in the analysis prior pi1~Beta(a,b) for the true probability in group 1. Default value is 0.
-
-{synopt:{opt b1a(#)}} "b" value in the analysis prior pi1~Beta(a,b) for the true probability in group 1. Default value is 0.
-
-{synopt:{opt a1a(#)}} "a" value in the analysis prior pi0~Beta(a,b) for the true probability in group 0. Default value is 0.
-
-{synopt:{opt b1a(#)}} "b" value in the analysis prior pi0~Beta(a,b) for the true probability in group 0. Default value is 0.
+{synopt:{opt prior0a(# #)}} Analysis prior pi0~Beta(a,b) for the true probability in group 0. 
 
 {syntab:Options specifying the problem}
 
@@ -52,11 +45,11 @@
 
 {synopt:{opt crit:eria(numlist)}} One or more cut-offs for posterior p(effective)
 
-{synopt:{opt noben:efit}} How to handle the possibility of treatment not being truly beneficial (i.e. pi1>pi0+delta). nobenefit(fail), the default,
-handles this as a failure in the power calculation, so power is defined as probability of evidence of benefit AND true 
-benefit. nobenefit(cond)
-calculates power conditional on true benefit, , so power is defined as probability of evidence of benefit GIVEN true 
-benefit.
+{synopt:{opt noben:efit}} How to handle the possibility of treatment not being truly beneficial 
+(i.e. pi1>pi0+delta). nobenefit(fail), the default, handles this as a failure in the power 
+calculation, so power is defined as probability of evidence of benefit AND true benefit. The 
+alternative, nobenefit(cond), calculates power conditional on true benefit, so power is defined 
+as probability of evidence of benefit GIVEN true benefit.
 
 {syntab:Calculation options}
 
@@ -85,38 +78,37 @@ benefit.
 
 {marker description}{...}
 {title:Description}
-{pstd}bayesSS computes the power of a simple two-arm clinical trial with binary outcome, 
+{pstd}bayespower computes the power of a simple two-arm clinical trial with binary outcome, 
 allowing the design prior to differ from the analysis prior. 
 The design prior is used to sample parameter values when generating the data. 
 The analysis prior is used to perform the Bayesian analysis. 
 Both priors are assumed to be Beta distributions and hence can be specified by their effective sample size and their mean.
 
-[it should really be called bayespower]
-
-{pstd}The program is based on Supplementary material to paper by Turner et al, "Practical approaches to Bayesian sample size determination in non-inferiority trials with binary outcomes".
+{pstd}The program is based on Supplementary material to the paper by {help bayespower##Turner23:Turner et al}.
 
 {pstd}The sampling approach captures the discreteness of the sampling distribution,
 	which makes the Bayesian power non-linear in sample size.
-Prior specification:
-	Argument prior*d1 sets the design prior for p(outcome) in arm 1 (experimental):
-		priornd1 = effective sample size of prior,
-		priormeand1 = prior mean.
-	Similarly prior*a1 sets the analysis prior in arm 1 etc.
-	But priorn*=0 means a spike prior, not a flat prior
+	
+{pstd}A frequentist power calculation is also reported. This fixes the true parameter values at their prior means and uses standard power software ({help artbin}).
 
 
 {marker examples}{...}
 {title:Examples}
 
-{pstd} This example corresponds to the frequentist approach, because we use large values of priornd to set the design prior as very precise (effectively, we know that theta1=.03 and theta2=0.015)
-and we use zero values of priorna to set the analysis prior as very diffuse (we express no prior information):
+{pstd} First example from {help bayespower##Turner23:Turner et al}: redesign of the ODYSSEY trial where outcome proportions are expected to be 0.,18 in each arm, and NI margin is 0.1.
 
-{phang}. {stata "bayesSS, n1(500) n2(500) priornd1(100000) priormeand1(.03) priorna1(0) priormeana1(0.03) priornd2(100000) priormeand2(.015) priorna2(0) priormeana2(0.015)"}
+{pstd} First do the Bayesian calculation corresponding to 
+the frequentist approach: set the Design priors close to point priors at 0.18. 
+Analysis prior is very diffuse (we express no prior information). We expect 
+the power to be 90% at a same size of 310 per arm.
 
-{pstd} A more Bayesian example where This example corresponds to the frequentist approach, because we use large values of priornd to set the design prior as very precise (effectively, we know that theta1=.03 and theta2=0.015)
-and we use zero values of priorna to set the analysis prior as very diffuse (we express no prior information):
+{phang}. {stata "bayespower, n1(310) n0(310) priorspec(ab) prior1d(6600 30200) prior0d(6600 30200) prior1a(1 1) prior0a(1 1) delta(.1) seed(3)"}
 
-{phang}. {stata "bayesSS, n1(500) n2(500) priornd1(100000) priormeand1(.03) priorna1(0) priormeana1(0.03) priornd2(100000) priormeand2(.015) priorna2(0) priormeana2(0.015)"}
+{pstd} A more Bayesian analysis: the design priors allow the true proportions to vary around the target 0.18 with a SD of 0.02,
+while the analysis uses a sceptical prior centred at the null (i.e. with pi1=0.28 and 
+pi0=0.18). This gives a much lower power of 41%.
+
+{phang}. {stata "bayespower, n1(310) n0(310) priorspec(ab) prior1d(66 302) prior0d(66 302) prior1a(141 362) prior0a(66 302) delta(.1) seed(3)"}
 
 
 {title:Stored results}
@@ -124,8 +116,14 @@ and we use zero values of priorna to set the analysis prior as very diffuse (we 
 {synoptset 15 tabbed}{...}
 
 
+{title:References}
+
+{phang}{marker Turner23}Turner RM et al (2023). ‘Practical approaches to Bayesian sample size 
+determination in non‐inferiority trials with binary outcomes’, Statistics in Medicine, 42(8), 
+pp. 1127–1138. {browse "https://doi.org/10.1002/sim.9661"}.
+
 {title:Author}
-{p}
+{p}Ian White, Becky Turner.
 
 
 

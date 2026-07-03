@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  C:\ian\git\Tailoring\bayespower_test.log
   log type:  text
- opened on:   3 Jul 2026, 11:10:02
+ opened on:   3 Jul 2026, 11:50:00
 
 . /*
 > bayespower_test.do
@@ -12,11 +12,13 @@
 . 
 . prog drop _all
 
+. set seed 610160
+
 . 
 . * like frequentist: n=310/arm
-. bayespower, n1(310) n0(310) ///
->         a1d(6600) b1d(30200) a0d(6600) b0d(30200) ///
->         a1a(1) b1a(1) a0a(1) b0a(1) ///
+. bayespower, n1(310) n0(310) priorspec(ab) ///
+>         prior1d(6600 30200) prior0d(6600 30200) ///
+>         prior1a(1 1) prior0a(1 1) ///
 >         delta(.1) crit(.975) nopreserve nograph format(%6.3f)
 --------------------------- PROBLEM ---------------------------
                                           Group 1    Group 0
@@ -30,17 +32,40 @@ Power is p(evidence of benefit...         AND true benefit)
 
 -------------------------------- RESULTS --------------------------------
 Criterion                                 Value      95% Monte Carlo intl  Frequent.
-Mean post. prob. of benefit                0.989      0.989      0.990
-Power for post. prob. of benefit > .975    0.901      0.895      0.907      0.896
+Mean post. prob. of benefit                0.989      0.988      0.990
+Power for post. prob. of benefit > .975    0.904      0.898      0.909      0.896
+
+. assert abs(r(PPB_975) - 0.9) < 0.01
+
+. 
+. * same problem, alternative formulation
+. bayespower, n1(310) n0(310) priorspec(ms) ///
+>         prior1d(.18 .002) prior0d(.18 .002) ///
+>         prior1a(.5 .28867513) prior0a(.5 .28867513) ///
+>         delta(.1) crit(.975) nopreserve nograph format(%6.3f)
+--------------------------- PROBLEM ---------------------------
+                                          Group 1    Group 0
+Sample size                               310        310
+Design prior:   mean                       0.180      0.180
+                SD                         0.002      0.002
+Analysis prior: mean                       0.500      0.500
+                SD                         0.289      0.289
+Margin                                                0.100
+Power is p(evidence of benefit...         AND true benefit)
+
+-------------------------------- RESULTS --------------------------------
+Criterion                                 Value      95% Monte Carlo intl  Frequent.
+Mean post. prob. of benefit                0.989      0.988      0.990
+Power for post. prob. of benefit > .975    0.896      0.890      0.902      0.895
 
 . assert abs(r(PPB_975) - 0.9) < 0.01
 
 . * expect power = 90%
 . 
 . * prior SD = 0.2: n=310/arm
-. bayespower, n1(310) n0(310) ///
->         a1d(66) b1d(302) a0d(66) b0d(302) ///
->         a1a(1) b1a(1) a0a(1) b0a(1) ///
+. bayespower, n1(310) n0(310) priorspec(ab) ///
+>         prior1d(66 302) prior0d(66 302) ///
+>         prior1a(1 1) prior0a(1 1) ///
 >         delta(.1) nograph crit(.975)
 --------------------------- PROBLEM ---------------------------
                                           Group 1    Group 0
@@ -54,17 +79,17 @@ Power is p(evidence of benefit...         AND true benefit)
 
 -------------------------------- RESULTS --------------------------------
 Criterion                                 Value      95% Monte Carlo intl  Frequent.
-Mean post. prob. of benefit               .97436693  .97283107  .97590279
-Power for post. prob. of benefit > .975   .8292      .82167841  .83652935  .89596626
+Mean post. prob. of benefit               .97289745  .97128449  .9745104
+Power for post. prob. of benefit > .975   .8226      .8149692   .83004244  .89596626
 
 . assert abs(r(PPB_975) - 0.83) < 0.01
 
 . * expect power = 83%
 . 
 . * prior SD = 0.2: n=440/arm
-. bayespower, n1(440) n0(440) ///
->         a1d(66) b1d(302) a0d(66) b0d(302) ///
->         a1a(1) b1a(1) a0a(1) b0a(1) ///
+. bayespower, n1(440) n0(440) priorspec(ab) ///
+>         prior1d(66 302) prior0d(66 302) ///
+>         prior1a(1 1) prior0a(1 1) ///
 >         delta(.1) nograph crit(.975)
 --------------------------- PROBLEM ---------------------------
                                           Group 1    Group 0
@@ -78,17 +103,17 @@ Power is p(evidence of benefit...         AND true benefit)
 
 -------------------------------- RESULTS --------------------------------
 Criterion                                 Value      95% Monte Carlo intl  Frequent.
-Mean post. prob. of benefit               .9849588   .98375742  .98616018
-Power for post. prob. of benefit > .975   .9028      .89682613  .90853809  .96994024
+Mean post. prob. of benefit               .98482529  .98359173  .98605885
+Power for post. prob. of benefit > .975   .9026      .89662086  .90834347  .96994024
 
 . assert abs(r(PPB_975) - 0.9) < 0.01
 
 . * expect power = 90%
 . 
 . * "enthusiastic" analysis priors Be(11,48)
-. bayespower, n1(310) n0(310) ///
->         a1d(66) b1d(302) a0d(66) b0d(302) ///
->         a1a(11) b1a(48) a0a(11) b0a(48) ///
+. bayespower, n1(310) n0(310) priorspec(ab) ///
+>         prior1d(66 302) prior0d(66 302) ///
+>         prior1a(11 48) prior0a(11 48) ///
 >         delta(.1) nograph crit(.975)
 --------------------------- PROBLEM ---------------------------
                                           Group 1    Group 0
@@ -102,17 +127,17 @@ Power is p(evidence of benefit...         AND true benefit)
 
 -------------------------------- RESULTS --------------------------------
 Criterion                                 Value      95% Monte Carlo intl  Frequent.
-Mean post. prob. of benefit               .98687024  .98591171  .98782877
-Power for post. prob. of benefit > .975   .896       .88985123  .90191705  .89596626
+Mean post. prob. of benefit               .98601329  .98495697  .98706962
+Power for post. prob. of benefit > .975   .8974      .89128656  .90328088  .89596626
 
 . assert abs(r(PPB_975) - 0.9) < 0.01
 
 . * expect power = 90%
 . 
 . * "sceptical" analysis priors Be(11,48)
-. bayespower, n1(310) n0(310) ///
->         a1d(66) b1d(302) a0d(66) b0d(302) ///
->         a1a(141) b1a(362) a0a(66) b0a(302) ///
+. bayespower, n1(310) n0(310) priorspec(ab) ///
+>         prior1d(66 302) prior0d(66 302) ///
+>         prior1a(141 362) prior0a(66 302) ///
 >         delta(.1) nograph crit(.975)
 --------------------------- PROBLEM ---------------------------
                                           Group 1    Group 0
@@ -126,16 +151,16 @@ Power is p(evidence of benefit...         AND true benefit)
 
 -------------------------------- RESULTS --------------------------------
 Criterion                                 Value      95% Monte Carlo intl  Frequent.
-Mean post. prob. of benefit               .91523481  .91294827  .91752134
-Power for post. prob. of benefit > .975   .4169      .40721185  .42663657  .89596626
+Mean post. prob. of benefit               .91648587  .91422241  .91874932
+Power for post. prob. of benefit > .975   .4163      .40661402  .42603476  .89596626
 
 . assert abs(r(PPB_975) - 0.41) < 0.01
 
 . * expect power = 41%
 . 
-. bayespower, n1(760) n0(760) ///
->         a1d(66) b1d(302) a0d(66) b0d(302) ///
->         a1a(141) b1a(362) a0a(66) b0a(302) ///
+. bayespower, n1(760) n0(760) priorspec(ab) ///
+>         prior1d(66 302) prior0d(66 302) ///
+>         prior1a(141 362) prior0a(66 302) ///
 >         delta(.1) crit(.975) graph(name(post1, replace))
 --------------------------- PROBLEM ---------------------------
                                           Group 1    Group 0
@@ -149,8 +174,8 @@ Power is p(evidence of benefit...         AND true benefit)
 
 -------------------------------- RESULTS --------------------------------
 Criterion                                 Value      95% Monte Carlo intl  Frequent.
-Mean post. prob. of benefit               .98556833  .98443928  .98669739
-Power for post. prob. of benefit > .975   .8967      .89056885  .90259901  .99901559
+Mean post. prob. of benefit               .98597605  .98486428  .98708782
+Power for post. prob. of benefit > .975   .8995      .89344021  .90532598  .99901559
 
 --- Drawing histogram ---
 
@@ -162,5 +187,5 @@ end of do-file
       name:  <unnamed>
        log:  C:\ian\git\Tailoring\bayespower_test.log
   log type:  text
- closed on:   3 Jul 2026, 11:10:04
+ closed on:   3 Jul 2026, 11:50:02
 -------------------------------------------------------------------------------------------

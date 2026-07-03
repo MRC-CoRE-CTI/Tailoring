@@ -1,9 +1,8 @@
---------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  C:\Users\rmjwiww\OneDrive - University College London\Home\Design\C
-> OIN-UP\commentary\samplesize calcs for supplement.log
+       log:  C:\ian\git\Tailoring\samplesize calcs for supplement.log
   log type:  text
- opened on:   2 Jul 2026, 14:43:09
+ opened on:   3 Jul 2026, 12:04:59
 
 . /*
 > Comparing Interventions Used in Practice: Supplemental material
@@ -211,21 +210,45 @@ Expected number of events per group    449 493.9
 . // Bayesian design      
 . // 90% power for 80-20 evidence
 . // Assumes benefit of better treatment = 5%
-. bayesSS, n1(890) n2(890) priormeand1(.5) priormeand2(.55) reps(1000000) ///
+. bayespower, n1(890) n0(890) priorspec(ms) ///
+>         prior1d(.55 .001) prior0d(.5 .001) ///
+>         prior1a(.5 .28867513) prior0a(.5 .28867513) ///
 >         seed(3) nofreq nograph criteria(.80) 
-Criterion                                 Value      95% Monte Carlo intl
-Mean post. prob. of benefit               .93249271  .93226032  .9327251
-Power for post. prob. of benefit > .8     .900169    .89957979  .90075589  
+--------------------------- PROBLEM ---------------------------
+                                          Group 1    Group 0
+Sample size                               890        890
+Design prior:   mean                      .55        .5
+                SD                        .001       .001
+Analysis prior: mean                      .5         .5
+                SD                        .28867513  .28867513
+Margin                                               0
+Power is p(evidence of benefit...         AND true benefit)
 
-. 
+-------------------------------- RESULTS --------------------------------
+Criterion                                 Value      95% Monte Carlo intl
+Mean post. prob. of benefit               .93334108  .93101764  .93566453
+Power for post. prob. of benefit > .8     .9026      .89662086  .90834347  
+
 . // Expected 80-20 evidence
 . // Assumes benefit of better treatment = 5%
-. bayesSS, n1(282) n2(282) priormeand1(.5) priormeand2(.55) reps(1000000) ///
->         seed(3) nofreq nograph
+. bayespower, n1(282) n0(282) priorspec(ms) ///
+>         prior1d(.55 .001) prior0d(.5 .001) ///
+>         prior1a(.5 .28867513) prior0a(.5 .28867513) ///
+>         seed(3) nofreq nograph criteria(.80) 
+--------------------------- PROBLEM ---------------------------
+                                          Group 1    Group 0
+Sample size                               282        282
+Design prior:   mean                      .55        .5
+                SD                        .001       .001
+Analysis prior: mean                      .5         .5
+                SD                        .28867513  .28867513
+Margin                                               0
+Power is p(evidence of benefit...         AND true benefit)
+
+-------------------------------- RESULTS --------------------------------
 Criterion                                 Value      95% Monte Carlo intl
-Mean post. prob. of benefit               .80024969  .79982339  .80067599
-Power for post. prob. of benefit > 0.975  .21544     .21463453  .21624712  
-Power for post. prob. of benefit > 0.8    .650533    .64959755  .65146758  
+Mean post. prob. of benefit               .80317081  .79892593  .80741568
+Power for post. prob. of benefit > .8     .6475      .6380444   .65686962  
 
 . 
 . 
@@ -275,8 +298,7 @@ Expected number of events per group    163.5 179.85
 . 
 end of do-file
       name:  <unnamed>
-       log:  C:\Users\rmjwiww\OneDrive - University College London\Home\Design\C
-> OIN-UP\commentary\samplesize calcs for supplement.log
+       log:  C:\ian\git\Tailoring\samplesize calcs for supplement.log
   log type:  text
- closed on:   2 Jul 2026, 14:43:12
---------------------------------------------------------------------------------
+ closed on:   3 Jul 2026, 12:05:02
+-------------------------------------------------------------------------------------------

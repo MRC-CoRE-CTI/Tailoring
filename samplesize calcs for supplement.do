@@ -46,13 +46,16 @@ artbin, pr(.5 .55) power(.9) alpha(.4)
 // Bayesian design 	
 // 90% power for 80-20 evidence
 // Assumes benefit of better treatment = 5%
-bayesSS, n1(890) n2(890) priormeand1(.5) priormeand2(.55) reps(1000000) ///
+bayespower, n1(890) n0(890) priorspec(ms) ///
+	prior1d(.55 .001) prior0d(.5 .001) ///
+	prior1a(.5 .28867513) prior0a(.5 .28867513) ///
 	seed(3) nofreq nograph criteria(.80) 
-
 // Expected 80-20 evidence
 // Assumes benefit of better treatment = 5%
-bayesSS, n1(282) n2(282) priormeand1(.5) priormeand2(.55) reps(1000000) ///
-	seed(3) nofreq nograph
+bayespower, n1(282) n0(282) priorspec(ms) ///
+	prior1d(.55 .001) prior0d(.5 .001) ///
+	prior1a(.5 .28867513) prior0a(.5 .28867513) ///
+	seed(3) nofreq nograph criteria(.80) 
 
 
 // Decision-based approach
