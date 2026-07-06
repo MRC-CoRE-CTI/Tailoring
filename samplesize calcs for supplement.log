@@ -1,15 +1,15 @@
--------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  C:\ian\git\Tailoring\samplesize calcs for supplement.log
   log type:  text
- opened on:   3 Jul 2026, 12:04:59
+ opened on:   6 Jul 2026, 10:57:21
 
 . /*
 > Comparing Interventions Used in Practice: Supplemental material
 > samplesize calcs for supplement.do
-> Stata program to calculate sample size for Table 1
-> requires: bayesSS.ado (also supplied)
-> IW 8/10/2024
+> Stata program to calculate sample size for text & Table
+> requires: bayespower.ado (also supplied)
+> IW 8/10/2024, revised 6/7/2026
 > */
 . 
 . 
@@ -211,46 +211,46 @@ Expected number of events per group    449 493.9
 . // 90% power for 80-20 evidence
 . // Assumes benefit of better treatment = 5%
 . bayespower, n1(890) n0(890) priorspec(ms) ///
->         prior1d(.55 .001) prior0d(.5 .001) ///
->         prior1a(.5 .28867513) prior0a(.5 .28867513) ///
+>         prior1d(.55 0) prior0d(.5 0) ///
+>         prior1a(.5 .29) prior0a(.5 .29) ///
 >         seed(3) nofreq nograph criteria(.80) 
 --------------------------- PROBLEM ---------------------------
                                           Group 1    Group 0
 Sample size                               890        890
 Design prior:   mean                      .55        .5
-                SD                        .001       .001
+                SD                        0          0
 Analysis prior: mean                      .5         .5
-                SD                        .28867513  .28867513
+                SD                        .29        .29
 Margin                                               0
 Power is p(evidence of benefit...         AND true benefit)
 
 -------------------------------- RESULTS --------------------------------
 Criterion                                 Value      95% Monte Carlo intl
-Mean post. prob. of benefit               .93334108  .93101764  .93566453
+Mean post. prob. of benefit               .93334258  .93101914  .93566602
 Power for post. prob. of benefit > .8     .9026      .89662086  .90834347  
 
 . // Expected 80-20 evidence
 . // Assumes benefit of better treatment = 5%
 . bayespower, n1(282) n0(282) priorspec(ms) ///
->         prior1d(.55 .001) prior0d(.5 .001) ///
->         prior1a(.5 .28867513) prior0a(.5 .28867513) ///
+>         prior1d(.55 0) prior0d(.5 0) ///
+>         prior1a(.5 .29) prior0a(.5 .29) ///
 >         seed(3) nofreq nograph criteria(.80) 
 --------------------------- PROBLEM ---------------------------
                                           Group 1    Group 0
 Sample size                               282        282
 Design prior:   mean                      .55        .5
-                SD                        .001       .001
+                SD                        0          0
 Analysis prior: mean                      .5         .5
-                SD                        .28867513  .28867513
+                SD                        .29        .29
 Margin                                               0
 Power is p(evidence of benefit...         AND true benefit)
 
 -------------------------------- RESULTS --------------------------------
 Criterion                                 Value      95% Monte Carlo intl
-Mean post. prob. of benefit               .80317081  .79892593  .80741568
+Mean post. prob. of benefit               .80317661  .79893167  .80742156
 Power for post. prob. of benefit > .8     .6475      .6380444   .65686962  
 
-. 
+. * note 0.29=1/sqrt(12), the SD of the Beta(1,1) distribution
 . 
 . // Decision-based approach
 . /* Explanation: a trial with two-sided alpha=1 always declares statistical 
@@ -300,5 +300,5 @@ end of do-file
       name:  <unnamed>
        log:  C:\ian\git\Tailoring\samplesize calcs for supplement.log
   log type:  text
- closed on:   3 Jul 2026, 12:05:02
--------------------------------------------------------------------------------------------
+ closed on:   6 Jul 2026, 10:57:23
+-----------------------------------------------------------------------------------------------------

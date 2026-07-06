@@ -1,9 +1,9 @@
 /*
 Comparing Interventions Used in Practice: Supplemental material
 samplesize calcs for supplement.do
-Stata program to calculate sample size for Table 1
-requires: bayesSS.ado (also supplied)
-IW 8/10/2024
+Stata program to calculate sample size for text & Table
+requires: bayespower.ado (also supplied)
+IW 8/10/2024, revised 6/7/2026
 */
 
 
@@ -47,16 +47,16 @@ artbin, pr(.5 .55) power(.9) alpha(.4)
 // 90% power for 80-20 evidence
 // Assumes benefit of better treatment = 5%
 bayespower, n1(890) n0(890) priorspec(ms) ///
-	prior1d(.55 .001) prior0d(.5 .001) ///
-	prior1a(.5 .28867513) prior0a(.5 .28867513) ///
+	prior1d(.55 0) prior0d(.5 0) ///
+	prior1a(.5 .29) prior0a(.5 .29) ///
 	seed(3) nofreq nograph criteria(.80) 
 // Expected 80-20 evidence
 // Assumes benefit of better treatment = 5%
 bayespower, n1(282) n0(282) priorspec(ms) ///
-	prior1d(.55 .001) prior0d(.5 .001) ///
-	prior1a(.5 .28867513) prior0a(.5 .28867513) ///
+	prior1d(.55 0) prior0d(.5 0) ///
+	prior1a(.5 .29) prior0a(.5 .29) ///
 	seed(3) nofreq nograph criteria(.80) 
-
+* note 0.29=1/sqrt(12), the SD of the Beta(1,1) distribution
 
 // Decision-based approach
 /* Explanation: a trial with two-sided alpha=1 always declares statistical 

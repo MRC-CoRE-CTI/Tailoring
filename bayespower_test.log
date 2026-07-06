@@ -1,8 +1,8 @@
--------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  C:\ian\git\Tailoring\bayespower_test.log
   log type:  text
- opened on:   3 Jul 2026, 11:50:00
+ opened on:   6 Jul 2026, 10:55:35
 
 . /*
 > bayespower_test.do
@@ -181,11 +181,85 @@ Power for post. prob. of benefit > .975   .8995      .89344021  .90532598  .9990
 
 . assert abs(r(PPB_975) - 0.9) < 0.01
 
+. local PPB = r(PPB_975)
+
 . * expect power = 90%
+. 
+. // check that corresponding formulations give ~same answers
+. * (1) small SD = no SD
+. bayespower, n1(760) n0(760) priorspec(ms) ///
+>         prior1d(.18 .001) prior0d(.18 .001) ///
+>         prior1a(.5 .29) prior0a(.5 .29) ///
+>         delta(.1) crit(.975) nograph seed(3)
+--------------------------- PROBLEM ---------------------------
+                                          Group 1    Group 0
+Sample size                               760        760
+Design prior:   mean                      .18        .18
+                SD                        .001       .001
+Analysis prior: mean                      .5         .5
+                SD                        .29        .29
+Margin                                               .1
+Power is p(evidence of benefit...         AND true benefit)
+
+-------------------------------- RESULTS --------------------------------
+Criterion                                 Value      95% Monte Carlo intl  Frequent.
+Mean post. prob. of benefit               .99983798  .99979359  .99988237
+Power for post. prob. of benefit > .975   .999       .99816174  .99952036  .99899261
+
+. local PPB = r(PPB_975)
+
+. 
+. bayespower, n1(760) n0(760) priorspec(ms) ///
+>         prior1d(.18 0) prior0d(.18 0) ///
+>         prior1a(.5 .29) prior0a(.5 .29) ///
+>         delta(.1) crit(.975) nograph seed(3)
+--------------------------- PROBLEM ---------------------------
+                                          Group 1    Group 0
+Sample size                               760        760
+Design prior:   mean                      .18        .18
+                SD                        0          0
+Analysis prior: mean                      .5         .5
+                SD                        .29        .29
+Margin                                               .1
+Power is p(evidence of benefit...         AND true benefit)
+
+-------------------------------- RESULTS --------------------------------
+Criterion                                 Value      95% Monte Carlo intl  Frequent.
+Mean post. prob. of benefit               .99983798  .99979359  .99988237
+Power for post. prob. of benefit > .975   .999       .99816174  .99952036  .99899261
+
+. assert `PPB' == r(PPB_975)
+
+. 
+. * (2) ab = ms
+. bayespower, n1(760) n0(760) priorspec(ab) ///
+>         prior1d(18000 82000) prior0d(18000 82000) ///
+>         prior1a(1 1) prior0a(1 1) ///
+>         delta(.1) crit(.975) nograph seed(3)
+--------------------------- PROBLEM ---------------------------
+                                          Group 1    Group 0
+Sample size                               760        760
+Design prior:   mean                      .18        .18
+                SD                        .0012149   .0012149
+Analysis prior: mean                      .5         .5
+                SD                        .28867513  .28867513
+Margin                                               .1
+Power is p(evidence of benefit...         AND true benefit)
+
+-------------------------------- RESULTS --------------------------------
+Criterion                                 Value      95% Monte Carlo intl  Frequent.
+Mean post. prob. of benefit               .99982623  .99978924  .99986322
+Power for post. prob. of benefit > .975   .9989      .99803265  .99945076  .99899261
+
+. di `PPB', r(PPB_975)
+.999 .9989
+
+. assert abs(`PPB' - r(PPB_975)) < 1E-4
+
 . 
 end of do-file
       name:  <unnamed>
        log:  C:\ian\git\Tailoring\bayespower_test.log
   log type:  text
- closed on:   3 Jul 2026, 11:50:02
--------------------------------------------------------------------------------------------
+ closed on:   6 Jul 2026, 10:55:36
+-----------------------------------------------------------------------------------------------------

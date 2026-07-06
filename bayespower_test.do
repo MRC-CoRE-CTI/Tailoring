@@ -59,4 +59,27 @@ bayespower, n1(760) n0(760) priorspec(ab) ///
 	prior1a(141 362) prior0a(66 302) ///
 	delta(.1) crit(.975) graph(name(post1, replace))
 assert abs(r(PPB_975) - 0.9) < 0.01
+local PPB = r(PPB_975)
 * expect power = 90%
+
+// check that corresponding formulations give ~same answers
+* (1) small SD = no SD
+bayespower, n1(760) n0(760) priorspec(ms) ///
+	prior1d(.18 .001) prior0d(.18 .001) ///
+	prior1a(.5 .29) prior0a(.5 .29) ///
+	delta(.1) crit(.975) nograph seed(3)
+local PPB = r(PPB_975)
+
+bayespower, n1(760) n0(760) priorspec(ms) ///
+	prior1d(.18 0) prior0d(.18 0) ///
+	prior1a(.5 .29) prior0a(.5 .29) ///
+	delta(.1) crit(.975) nograph seed(3)
+assert `PPB' == r(PPB_975)
+
+* (2) ab = ms
+bayespower, n1(760) n0(760) priorspec(ab) ///
+	prior1d(18000 82000) prior0d(18000 82000) ///
+	prior1a(1 1) prior0a(1 1) ///
+	delta(.1) crit(.975) nograph seed(3)
+di `PPB', r(PPB_975)
+assert abs(`PPB' - r(PPB_975)) < 1E-4
