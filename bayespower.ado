@@ -1,4 +1,5 @@
-*!	v0.5	IW	3jul2026	new syntax prior1d() etc; results match Becky's paper
+*!	v0.5.1	IW	24jul2026	nicer output format, corrected errors on graph
+*	v0.5	IW	3jul2026	new syntax prior1d() etc; results match Becky's paper
 *	v0.4	IW	2jul2026	make frequentist respect margin; try to match results with Becky's paper
 *	v0.3.2	IW	5jun2026
 *	v0.3.1	IW	8oct2024
@@ -38,7 +39,7 @@ syntax, n1(int) n0(int) /// sample size per arm
 
 if mi("`criteria'") local criteria 0.975 
 if mi("`colours'") local colours green black blue red
-
+local priorspec=subinstr("`priorspec'"," ","",.)
 foreach thing in 1d 0d 1a 0a {
 	tokenize `prior`thing''
 	if "`priorspec'"=="ab" {
@@ -111,7 +112,7 @@ local col2 _col(43)
 local col3 _col(54)
 local col4 _col(65)
 local col5 _col(76)
-di as text _dup(27) "-" " PROBLEM " _dup(27) "-"
+di as text "{hline 27} PROBLEM {hline 26}"
 di as text `col2' "Group 1" `col3' "Group 0"
 di as text "Sample size" as result `col2' `n1' `col3' `n0'
 di as text "Design prior:   mean" as result `col2' `format' `priormean1d' `col3' `format' `priormean0d'
@@ -122,8 +123,11 @@ di as text "Margin" as result `col3' `format' `delta'
 di as text "Power is p(evidence of benefit... " as result `col2' _c
 if "`nobenefit'"=="fail" di "AND" _c
 else di "|" _c
-di " true benefit)" _n
-di as text _dup(32) "-" " RESULTS " _dup(32) "-"
+di " true benefit)"
+di as text "{hline 62}" _n
+
+if "`freq'" != "nofreq" local moredup "{hline 11}""
+di as text "{hline 27} RESULTS {hline 37}`moredup'"
 di as text "Criterion" `col2' "Value" `col3' "$S_level% Monte Carlo intl" _c
 if "`freq'" != "nofreq" di `col5' "Frequent."
 else di
@@ -160,13 +164,14 @@ foreach crit of local criteria {
 		local returns `returns' freqpow`critname'
 	}
 	di as text "Power for post. prob. of benefit > `crit'" as result `col2' `format' `PPB`critname'' `col3' `format' `PPB`critname'_low' `col4' `format' `PPB`critname'_upp' `col5' `format' `freqpow`critname''
-	local rejprop`critname' = string(r(proportion),"%5.3f")
+	local PPB`critname'_formatted = string(`PPB`critname'',"%5.3f")
 	local xlines `xlines' xli(`crit', lcol(`col'))
-	local texts `texts' text(`thisypos' `crit' "Proportion with Peff>`crit' = `rejprop`critname''", place(9) col(`col'))
+	local texts `texts' text(`thisypos' `crit' "Proportion with Peff>`crit' = `PPB`critname'_formatted'", place(9) col(`col'))
 	mac shift
 	local thisypos = `thisypos' - `ypos'/10
-	local returns `returns' PPB`critname' PPB`critname'_low PPB`critname'_upp
+	local returns `returns' PPB`critname'_upp PPB`critname'_low PPB`critname' 
 }
+di as text "{hline 73}`moredup'""
 
 foreach thing of local returns {
 	return scalar `thing' = ``thing''
@@ -174,9 +179,9 @@ foreach thing of local returns {
 
 // Histogram
 if "`graph'" != "nograph" {
-	di as text _n "--- Drawing histogram ---"
+	di as text _n "Drawing histogram..."
 	global F9 histogram benefit_postprob, `xlines' `texts' ///
-	note("pE=`priormean1d', pC=`priormean0d', nE=`n1', nC=`n0', non-informative analysis prior" "`reps' simulated trials") ///
+	note("n1=`n1', n0=`n0', `reps' simulated trials") ///
 	scheme(mrc) `graphoptions'
 	`dicmd' $F9
 }
