@@ -1,24 +1,26 @@
 {smcl}
-{* *! version 0.5.1  24jul2026}{...}
+{* *! version 0.5.2  27jul2026}{...}
 {vieweralsosee "" "--"}{...}
 {vieweralsosee "Help artbin (if installed)" "help artbin"}{...}
 {viewerjumpto "Syntax" "bayespower##syntax"}{...}
 {viewerjumpto "Description" "bayespower##description"}{...}
-{viewerjumpto "Options" "bayespower##options"}{...}
-{viewerjumpto "Remarks" "bayespower##remarks"}{...}
+{viewerjumpto "Discrete sampling distribution" "bayespower##discrete"}{...}
 {viewerjumpto "Examples" "bayespower##examples"}{...}
 {title:Title}
+
 {phang}
 {bf:bayespower} {hline 2} Power calculation for a Bayesian analysis with a binary outcome
 
+
 {marker syntax}{...}
 {title:Syntax}
+
 {p 8 17 2}
 {cmdab:bayespower}
 [{cmd:,}
 {it:options}]
 
-{synoptset 20 tabbed}{...}
+{synoptset 21 tabbed}{...}
 {synopthdr}
 {synoptline}
 {syntab:Sample sizes (required)}
@@ -35,7 +37,7 @@ are equivalent using m=a/(a+b) and s^2=m(1-m)/(a+b+1).{p_end}
 
 {syntab:Options specifying the problem}
 {synopt:{opt delta(#)}} Non-inferiority margin. Default value is 0.{p_end}
-{synopt:{opt crit:eria(numlist)}} One or more cut-offs for posterior p(effective).{p_end}
+{synopt:{opt cut:offs(numlist)}} One or more cut-offs for posterior p(effective).{p_end}
 {synopt:{opt noben:efit}} How to handle the possibility of treatment not being truly beneficial 
 (i.e. pi1>pi0+delta). nobenefit(fail), the default, handles this as a failure in the power 
 calculation, so power is defined as probability of evidence of benefit AND true benefit. The 
@@ -46,22 +48,23 @@ as probability of evidence of benefit GIVEN true benefit.{p_end}
 {synopt:{opt reps(#)}} Number of trials to be simulated (number of repetitions).  Default value is 10000.{p_end}
 {synopt:{opt nofr:eq}} Don't report the analogous power for a frequentist analysis.{p_end}
 {synopt:{opt seed(string)}} Random number seed.{p_end}
-{synopt:{opt noint:eger}} Allow simulated clinical trials to have fractional data. [Why is this helpful?]{p_end}
+{synopt:{opt noint:eger}} Allow simulated clinical trials to have fractional data: see {help bayespower##discrete:Discrete sampling distribution} below.{p_end}
 
 {syntab:Output options}
-{synopt:{opt nogr:aph}} Don't graph the histogram of posterior p(effective){p_end}
-{synopt:{opt col:ours(string)}} Colours to be used in the graph for the cut-off(s) for posterior p(effective){p_end}
-{synopt:{opt yp:os(#)}} Vertical position of the text "Proportion with Peff>[criterion]". Default value is 10.{p_end}
+{synopt:{opt nogr:aph}} Don't graph the histogram of posterior p(effective).{p_end}
+{synopt:{opt col:ours(string)}} Colours to be used in the graph for the cut-off(s) for posterior p(effective).{p_end}
+{synopt:{opt yp:os(#)}} Vertical position of the text "Proportion with Peff>[cutoff]". Default value is 10.{p_end}
 {synopt:{opt nopres:erve}} Leaves the simulated trials and their results in memory (one row per trial). Default is to restore the data as it was.{p_end}
 {synopt:{opt graph(graph_options)}} Any options for {help graph histogram}.{p_end}
 {synoptline}
 {p2colreset}{...}
 {p 4 6 2}
 
+
 {marker description}{...}
 {title:Description}
 
-{pstd}bayespower computes the power of a simple two-arm clinical trial with binary outcome, 
+{pstd}{cmd:bayespower} computes the power of a simple two-arm clinical trial with binary outcome, 
 allowing the design prior to differ from the analysis prior. 
 The design prior is used to sample parameter values when generating the data. 
 The analysis prior is used to perform the Bayesian analysis. 
@@ -74,15 +77,27 @@ Both priors are assumed to be Beta distributions and hence can be specified by t
 4. computes p(effective), the posterior probability that the treatment is effective{break}
 5. repeats steps 1-4 for many repetitions
 
-{pstd}The Bayesian power is calculated as the proportion of simulated datsasets for which p(effective) exceeds a cut-off specified in {cmd:criteria()}. The program
+{pstd}The Bayesian power is calculated as the proportion of simulated datsasets for which p(effective) exceeds a cut-off specified in {cmd:cutoffs()}. The program
 also calculates the mean of p(effective), and optionally draws its histogram.
 
-{pstd}The sampling approach captures the discreteness of the sampling distribution,
-which makes the Bayesian power non-linear in sample size. This seems unreasonable: if 
-a larger sample size reduces power at the chosen criterion, it must still increase power at other criteria. The option
-{cmd:nointeger} implements a fix for this, in which a random value drawn from U(-0.5,0.5) is added to each sampled number of events d1, d0.
-
 {pstd}A frequentist power calculation is also reported. This fixes the true parameter values at their prior means and uses standard power software ({help artbin}).
+
+
+{marker discrete}{...}
+{title:Discrete sampling distribution}
+
+{pstd}
+Most power calculators, e.g. {help artbin} or {help power twoproportions}, make a Normal approximation to the sampling distribution of the test statistic. 
+This makes power increase smoothly with sample size. 
+
+{pstd}
+With binary outcomes, however, there is only a finite set of possible trial results, so the true sampling distribution of any posterior statistic, including p(effective), is discrete. 
+{cmd:bayespower} reproduces this true discreteness of the sampling distribution.
+A curious consequence is that the Bayesian power, computed at a particular cut-off, occasionally decreases as sample size increases. 
+While this is mathematically correct, it seems a poor basis for decision making: even when a larger sample size reduces power at the chosen cut-off, it must still increase power at other cut-offs. 
+
+{pstd}
+The option {cmd:nointeger} implements a fix for this, in which a random value drawn from U(-0.5,0.5) is added to each sampled number of events d1, d0.
 
 
 {marker examples}{...}
@@ -109,10 +124,10 @@ pi0=0.18). This gives a much lower power of 41%.
 
 {synoptset 15 tabbed}{...}
 {syntab:Scalars}
-{synopt:r(PPB_#)}Estimated probability that p(effective) exceeds 0.# (Bayesian power), where # is the digits after the decimal point for a value specified in {cmd:criteria()}{p_end}
+{synopt:r(PPB_#)}Estimated probability that p(effective) exceeds # (Bayesian power), where # is a string derived from a cutoff specified in {cmd:cutoffs()}{p_end}
 {synopt:r(PPB_#_low)}Lower Monte Carlo confidence limit for r(PPB_#), at {help level:the current significance level}{p_end}
 {synopt:r(PPB_#_upp)}Upper Monte Carlo confidence limit for r(PPB_#), at {help level:the current significance level}{p_end}
-{synopt:r(freqpow_#)}Calculated frequentist power at significance level #, where # is the digits after the decimal point for a value specified in {cmd:criteria()}{p_end}
+{synopt:r(freqpow_#)}Calculated frequentist power at significance level #, where # is a string derived from a cutoff specified in {cmd:cutoffs()}{p_end}
 {synopt:r(PPBmean)}Estimated expectation of p(effective){p_end}
 
 
@@ -121,6 +136,7 @@ pi0=0.18). This gives a much lower power of 41%.
 {phang}{marker Turner23}Turner RM et al (2023). ‘Practical approaches to Bayesian sample size 
 determination in non‐inferiority trials with binary outcomes’, Statistics in Medicine, 42(8), 
 pp. 1127–1138. {browse "https://doi.org/10.1002/sim.9661"}.
+
 
 {title:Authors}
 

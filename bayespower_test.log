@@ -1,15 +1,4 @@
------------------------------------------------------------------------------------------------------
-      name:  <unnamed>
-       log:  C:\ian\git\Tailoring\bayespower_test.log
-  log type:  text
- opened on:   6 Jul 2026, 10:55:35
 
-. /*
-> bayespower_test.do
-> Apply bayespower to Bayesian power examples in Becky's paper
-> IW 3jul2026
-> */
-. 
 . prog drop _all
 
 . set seed 610160
@@ -19,8 +8,8 @@
 . bayespower, n1(310) n0(310) priorspec(ab) ///
 >         prior1d(6600 30200) prior0d(6600 30200) ///
 >         prior1a(1 1) prior0a(1 1) ///
->         delta(.1) crit(.975) nopreserve nograph format(%6.3f)
---------------------------- PROBLEM ---------------------------
+>         delta(.1) cutoff(.975) nopreserve nograph format(%6.3f)
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               310        310
 Design prior:   mean                       0.179      0.179
@@ -29,11 +18,13 @@ Analysis prior: mean                       0.500      0.500
                 SD                         0.289      0.289
 Margin                                                0.100
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl  Frequent.
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit                0.989      0.988      0.990
 Power for post. prob. of benefit > .975    0.904      0.898      0.909      0.896
+------------------------------------------------------------------------------------
 
 . assert abs(r(PPB_975) - 0.9) < 0.01
 
@@ -42,8 +33,8 @@ Power for post. prob. of benefit > .975    0.904      0.898      0.909      0.89
 . bayespower, n1(310) n0(310) priorspec(ms) ///
 >         prior1d(.18 .002) prior0d(.18 .002) ///
 >         prior1a(.5 .28867513) prior0a(.5 .28867513) ///
->         delta(.1) crit(.975) nopreserve nograph format(%6.3f)
---------------------------- PROBLEM ---------------------------
+>         delta(.1) cutoff(.975) nopreserve nograph format(%6.3f)
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               310        310
 Design prior:   mean                       0.180      0.180
@@ -52,11 +43,13 @@ Analysis prior: mean                       0.500      0.500
                 SD                         0.289      0.289
 Margin                                                0.100
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl  Frequent.
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit                0.989      0.988      0.990
 Power for post. prob. of benefit > .975    0.896      0.890      0.902      0.895
+------------------------------------------------------------------------------------
 
 . assert abs(r(PPB_975) - 0.9) < 0.01
 
@@ -66,8 +59,8 @@ Power for post. prob. of benefit > .975    0.896      0.890      0.902      0.89
 . bayespower, n1(310) n0(310) priorspec(ab) ///
 >         prior1d(66 302) prior0d(66 302) ///
 >         prior1a(1 1) prior0a(1 1) ///
->         delta(.1) nograph crit(.975)
---------------------------- PROBLEM ---------------------------
+>         delta(.1) nograph cutoff(.975)
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               310        310
 Design prior:   mean                      .17934783  .17934783
@@ -76,11 +69,13 @@ Analysis prior: mean                      .5         .5
                 SD                        .28867513  .28867513
 Margin                                               .1
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl  Frequent.
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit               .97289745  .97128449  .9745104
 Power for post. prob. of benefit > .975   .8226      .8149692   .83004244  .89596626
+------------------------------------------------------------------------------------
 
 . assert abs(r(PPB_975) - 0.83) < 0.01
 
@@ -90,8 +85,8 @@ Power for post. prob. of benefit > .975   .8226      .8149692   .83004244  .8959
 . bayespower, n1(440) n0(440) priorspec(ab) ///
 >         prior1d(66 302) prior0d(66 302) ///
 >         prior1a(1 1) prior0a(1 1) ///
->         delta(.1) nograph crit(.975)
---------------------------- PROBLEM ---------------------------
+>         delta(.1) nograph cutoff(.975)
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               440        440
 Design prior:   mean                      .17934783  .17934783
@@ -100,11 +95,13 @@ Analysis prior: mean                      .5         .5
                 SD                        .28867513  .28867513
 Margin                                               .1
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl  Frequent.
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit               .98482529  .98359173  .98605885
 Power for post. prob. of benefit > .975   .9026      .89662086  .90834347  .96994024
+------------------------------------------------------------------------------------
 
 . assert abs(r(PPB_975) - 0.9) < 0.01
 
@@ -114,8 +111,8 @@ Power for post. prob. of benefit > .975   .9026      .89662086  .90834347  .9699
 . bayespower, n1(310) n0(310) priorspec(ab) ///
 >         prior1d(66 302) prior0d(66 302) ///
 >         prior1a(11 48) prior0a(11 48) ///
->         delta(.1) nograph crit(.975)
---------------------------- PROBLEM ---------------------------
+>         delta(.1) nograph cutoff(.975)
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               310        310
 Design prior:   mean                      .17934783  .17934783
@@ -124,11 +121,13 @@ Analysis prior: mean                      .18644068  .18644068
                 SD                        .05027931  .05027931
 Margin                                               .1
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl  Frequent.
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit               .98601329  .98495697  .98706962
 Power for post. prob. of benefit > .975   .8974      .89128656  .90328088  .89596626
+------------------------------------------------------------------------------------
 
 . assert abs(r(PPB_975) - 0.9) < 0.01
 
@@ -138,8 +137,8 @@ Power for post. prob. of benefit > .975   .8974      .89128656  .90328088  .8959
 . bayespower, n1(310) n0(310) priorspec(ab) ///
 >         prior1d(66 302) prior0d(66 302) ///
 >         prior1a(141 362) prior0a(66 302) ///
->         delta(.1) nograph crit(.975)
---------------------------- PROBLEM ---------------------------
+>         delta(.1) nograph cutoff(.975)
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               310        310
 Design prior:   mean                      .17934783  .17934783
@@ -148,11 +147,13 @@ Analysis prior: mean                      .28031809  .17934783
                 SD                        .02000694  .01997167
 Margin                                               .1
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl  Frequent.
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit               .91648587  .91422241  .91874932
 Power for post. prob. of benefit > .975   .4163      .40661402  .42603476  .89596626
+------------------------------------------------------------------------------------
 
 . assert abs(r(PPB_975) - 0.41) < 0.01
 
@@ -161,8 +162,8 @@ Power for post. prob. of benefit > .975   .4163      .40661402  .42603476  .8959
 . bayespower, n1(760) n0(760) priorspec(ab) ///
 >         prior1d(66 302) prior0d(66 302) ///
 >         prior1a(141 362) prior0a(66 302) ///
->         delta(.1) crit(.975) graph(name(post1, replace))
---------------------------- PROBLEM ---------------------------
+>         delta(.1) cutoff(.975) graph(name(post1, replace))
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               760        760
 Design prior:   mean                      .17934783  .17934783
@@ -171,13 +172,15 @@ Analysis prior: mean                      .28031809  .17934783
                 SD                        .02000694  .01997167
 Margin                                               .1
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl  Frequent.
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit               .98597605  .98486428  .98708782
 Power for post. prob. of benefit > .975   .8995      .89344021  .90532598  .99901559
+------------------------------------------------------------------------------------
 
---- Drawing histogram ---
+Drawing histogram...
 
 . assert abs(r(PPB_975) - 0.9) < 0.01
 
@@ -190,8 +193,8 @@ Power for post. prob. of benefit > .975   .8995      .89344021  .90532598  .9990
 . bayespower, n1(760) n0(760) priorspec(ms) ///
 >         prior1d(.18 .001) prior0d(.18 .001) ///
 >         prior1a(.5 .29) prior0a(.5 .29) ///
->         delta(.1) crit(.975) nograph seed(3)
---------------------------- PROBLEM ---------------------------
+>         delta(.1) cutoff(.975) nograph seed(3)
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               760        760
 Design prior:   mean                      .18        .18
@@ -200,11 +203,13 @@ Analysis prior: mean                      .5         .5
                 SD                        .29        .29
 Margin                                               .1
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl  Frequent.
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit               .99983798  .99979359  .99988237
 Power for post. prob. of benefit > .975   .999       .99816174  .99952036  .99899261
+------------------------------------------------------------------------------------
 
 . local PPB = r(PPB_975)
 
@@ -212,8 +217,8 @@ Power for post. prob. of benefit > .975   .999       .99816174  .99952036  .9989
 . bayespower, n1(760) n0(760) priorspec(ms) ///
 >         prior1d(.18 0) prior0d(.18 0) ///
 >         prior1a(.5 .29) prior0a(.5 .29) ///
->         delta(.1) crit(.975) nograph seed(3)
---------------------------- PROBLEM ---------------------------
+>         delta(.1) cutoff(.975) nograph seed(3)
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               760        760
 Design prior:   mean                      .18        .18
@@ -222,11 +227,13 @@ Analysis prior: mean                      .5         .5
                 SD                        .29        .29
 Margin                                               .1
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl  Frequent.
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit               .99983798  .99979359  .99988237
 Power for post. prob. of benefit > .975   .999       .99816174  .99952036  .99899261
+------------------------------------------------------------------------------------
 
 . assert `PPB' == r(PPB_975)
 
@@ -235,8 +242,8 @@ Power for post. prob. of benefit > .975   .999       .99816174  .99952036  .9989
 . bayespower, n1(760) n0(760) priorspec(ab) ///
 >         prior1d(18000 82000) prior0d(18000 82000) ///
 >         prior1a(1 1) prior0a(1 1) ///
->         delta(.1) crit(.975) nograph seed(3)
---------------------------- PROBLEM ---------------------------
+>         delta(.1) cutoff(.975) nograph seed(3)
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               760        760
 Design prior:   mean                      .18        .18
@@ -245,11 +252,13 @@ Analysis prior: mean                      .5         .5
                 SD                        .28867513  .28867513
 Margin                                               .1
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl  Frequent.
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit               .99982623  .99978924  .99986322
 Power for post. prob. of benefit > .975   .9989      .99803265  .99945076  .99899261
+------------------------------------------------------------------------------------
 
 . di `PPB', r(PPB_975)
 .999 .9989
@@ -257,9 +266,7 @@ Power for post. prob. of benefit > .975   .9989      .99803265  .99945076  .9989
 . assert abs(`PPB' - r(PPB_975)) < 1E-4
 
 . 
-end of do-file
-      name:  <unnamed>
-       log:  C:\ian\git\Tailoring\bayespower_test.log
-  log type:  text
- closed on:   6 Jul 2026, 10:55:36
------------------------------------------------------------------------------------------------------
+. di as result "*** BAYESPOWER HAS PASSED ALL ITS TESTS ***"
+*** BAYESPOWER HAS PASSED ALL ITS TESTS ***
+
+. log close

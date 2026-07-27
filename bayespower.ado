@@ -1,4 +1,5 @@
-*!	v0.5.1	IW	24jul2026	nicer output format, corrected errors on graph
+*!	v0.5.2	IW	27jul2026	rename criteria() as cutoffs() option
+*	v0.5.1	IW	24jul2026	nicer output format, corrected errors on graph
 *	v0.5	IW	3jul2026	new syntax prior1d() etc; results match Becky's paper
 *	v0.4	IW	2jul2026	make frequentist respect margin; try to match results with Becky's paper
 *	v0.3.2	IW	5jun2026
@@ -16,7 +17,7 @@ Example use:
 bayespower, n1(310) n0(310) priorspec(a b) ///
 	prior1d(66 302) prior0d(66 302) ///
 	prior1a(1 1) prior0a(1 1) priorspec(ab) ///
-	delta(.1) nograph crit(.975)
+	delta(.1) nograph cutoff(.975)
 
 Note
 	The sampling approach captures the discreteness of the sampling distribution,
@@ -28,7 +29,7 @@ syntax, n1(int) n0(int) /// sample size per arm
 	priorspec(string) ///
 	prior1d(numlist min=2 max=2) prior0d(numlist min=2 max=2) /// design priors
 	prior1a(numlist min=2 max=2) prior0a(numlist min=2 max=2) /// analysis priors
-	[delta(real 0) CRITeria(numlist) NOBENefit(string) /// rest of problem specification
+	[delta(real 0) CUToffs(numlist) NOBENefit(string) /// rest of problem specification
 	reps(int 10000) noFReq seed(string) noINTeger /// calculation options
 	noGRaph COLours(string) YPos(real 10) GRAPHoptions(string) /// graph options
 	noPREServe format(string) /// output options
@@ -37,7 +38,7 @@ syntax, n1(int) n0(int) /// sample size per arm
 
 // PARSING
 
-if mi("`criteria'") local criteria 0.975 
+if mi("`cutoffs'") local cutoffs 0.975 
 if mi("`colours'") local colours green black blue red
 local priorspec=subinstr("`priorspec'"," ","",.)
 foreach thing in 1d 0d 1a 0a {
@@ -128,7 +129,7 @@ di as text "{hline 62}" _n
 
 if "`freq'" != "nofreq" local moredup "{hline 11}""
 di as text "{hline 27} RESULTS {hline 37}`moredup'"
-di as text "Criterion" `col2' "Value" `col3' "$S_level% Monte Carlo intl" _c
+di as text "Cut-off" `col2' "Value" `col3' "$S_level% Monte Carlo intl" _c
 if "`freq'" != "nofreq" di `col5' "Frequent."
 else di
 di as text "Mean post. prob. of benefit" as result `col2' `format' r(mean) `col3' `format' r(lb) `col4' `format' r(ub) 
@@ -139,37 +140,37 @@ local returns PPBmean
 
 tokenize "`colours'"
 local thisypos `ypos'
-foreach crit of local criteria {
+foreach cutoff of local cutoffs {
 	local col `1'
-	if !inrange(`crit',0,1) {
-		di as error "Criterion `crit' ignored: not in [0,1]"
+	if !inrange(`cutoff',0,1) {
+		di as error "Cut-off `cutoff' ignored: not in [0,1]"
 		continue
 	}
-	local critname = strtoname("`crit'")
+	local cutoffname = strtoname("`cutoff'")
 	local ifand = cond("`nobenefit'"=="fail", "&", "if")
 	local gt = cond(`type'==1,">","<")
-	gen peff_gt_`critname'  = (benefit_postprob > `crit') `ifand' pi0+`delta' `gt' pi1
-	label var peff_gt_`critname' "Posterior prob of benefit > `crit'?"
-	qui ci prop peff_gt_`critname'
-	local PPB`critname' = r(proportion)
-	local PPB`critname'_low = r(lb)
-	local PPB`critname'_upp = r(ub)
-	local crit`critname' = `crit'
+	gen peff_gt_`cutoffname'  = (benefit_postprob > `cutoff') `ifand' pi0+`delta' `gt' pi1
+	label var peff_gt_`cutoffname' "Posterior prob of benefit > `cutoff'?"
+	qui ci prop peff_gt_`cutoffname'
+	local PPB`cutoffname' = r(proportion)
+	local PPB`cutoffname'_low = r(lb)
+	local PPB`cutoffname'_upp = r(ub)
+	local cutoff`cutoffname' = `cutoff'
 	if "`freq'" != "nofreq" {
-		local alpha=1-`crit'
+		local alpha=1-`cutoff'
 		local n=`n1'+`n0'
 		local aratio  `n1' `n0'
 		`dicmd' artbin, pr(`priormean1d' `priormean0d') n(`n') aratio(`aratio') alpha(`alpha') onesided margin(`delta')
-		local freqpow`critname' = r(power)
-		local returns `returns' freqpow`critname'
+		local freqpow`cutoffname' = r(power)
+		local returns `returns' freqpow`cutoffname'
 	}
-	di as text "Power for post. prob. of benefit > `crit'" as result `col2' `format' `PPB`critname'' `col3' `format' `PPB`critname'_low' `col4' `format' `PPB`critname'_upp' `col5' `format' `freqpow`critname''
-	local PPB`critname'_formatted = string(`PPB`critname'',"%5.3f")
-	local xlines `xlines' xli(`crit', lcol(`col'))
-	local texts `texts' text(`thisypos' `crit' "Proportion with Peff>`crit' = `PPB`critname'_formatted'", place(9) col(`col'))
+	di as text "Power for post. prob. of benefit > `cutoff'" as result `col2' `format' `PPB`cutoffname'' `col3' `format' `PPB`cutoffname'_low' `col4' `format' `PPB`cutoffname'_upp' `col5' `format' `freqpow`cutoffname''
+	local PPB`cutoffname'_formatted = string(`PPB`cutoffname'',"%5.3f")
+	local xlines `xlines' xli(`cutoff', lcol(`col'))
+	local texts `texts' text(`thisypos' `cutoff' "Proportion with Peff>`cutoff' = `PPB`cutoffname'_formatted'", place(9) col(`col'))
 	mac shift
 	local thisypos = `thisypos' - `ypos'/10
-	local returns `returns' PPB`critname'_upp PPB`critname'_low PPB`critname' 
+	local returns `returns' PPB`cutoffname'_upp PPB`cutoffname'_low PPB`cutoffname' 
 }
 di as text "{hline 73}`moredup'""
 
