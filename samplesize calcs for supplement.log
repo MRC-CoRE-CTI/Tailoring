@@ -1,15 +1,15 @@
------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  C:\ian\git\Tailoring\samplesize calcs for supplement.log
   log type:  text
- opened on:   6 Jul 2026, 10:57:21
+ opened on:  27 Jul 2026, 10:58:57
 
 . /*
 > Comparing Interventions Used in Practice: Supplemental material
 > samplesize calcs for supplement.do
 > Stata program to calculate sample size for text & Table
 > requires: bayespower.ado (also supplied)
-> IW 8/10/2024, revised 6/7/2026
+> IW 8/10/2024, revised 6-27/7/2026
 > */
 . 
 . 
@@ -211,10 +211,10 @@ Expected number of events per group    449 493.9
 . // 90% power for 80-20 evidence
 . // Assumes benefit of better treatment = 5%
 . bayespower, n1(890) n0(890) priorspec(ms) ///
->         prior1d(.55 0) prior0d(.5 0) ///
->         prior1a(.5 .29) prior0a(.5 .29) ///
->         seed(3) nofreq nograph criteria(.80) 
---------------------------- PROBLEM ---------------------------
+>         prior1d(.55 0) prior0d(.50 0) ///
+>         prior1a(.50 .29) prior0a(.50 .29) ///
+>         seed(3) cutoff(.80) 
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               890        890
 Design prior:   mean                      .55        .5
@@ -223,19 +223,23 @@ Analysis prior: mean                      .5         .5
                 SD                        .29        .29
 Margin                                               0
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit               .93334258  .93101914  .93566602
-Power for post. prob. of benefit > .8     .9026      .89662086  .90834347  
+Power for post. prob. of benefit > .8     .9026      .89662086  .90834347  .89833441
+------------------------------------------------------------------------------------
+
+Drawing histogram...
 
 . // Expected 80-20 evidence
 . // Assumes benefit of better treatment = 5%
 . bayespower, n1(282) n0(282) priorspec(ms) ///
->         prior1d(.55 0) prior0d(.5 0) ///
->         prior1a(.5 .29) prior0a(.5 .29) ///
->         seed(3) nofreq nograph criteria(.80) 
---------------------------- PROBLEM ---------------------------
+>         prior1d(.55 0) prior0d(.50 0) ///
+>         prior1a(.50 .29) prior0a(.50 .29) ///
+>         seed(3) cutoff(.80) 
+--------------------------- PROBLEM --------------------------
                                           Group 1    Group 0
 Sample size                               282        282
 Design prior:   mean                      .55        .5
@@ -244,11 +248,15 @@ Analysis prior: mean                      .5         .5
                 SD                        .29        .29
 Margin                                               0
 Power is p(evidence of benefit...         AND true benefit)
+--------------------------------------------------------------
 
--------------------------------- RESULTS --------------------------------
-Criterion                                 Value      95% Monte Carlo intl
+--------------------------- RESULTS ------------------------------------------------
+Cut-off                                   Value      95% Monte Carlo intl  Frequent.
 Mean post. prob. of benefit               .80317661  .79893167  .80742156
-Power for post. prob. of benefit > .8     .6475      .6380444   .65686962  
+Power for post. prob. of benefit > .8     .6475      .6380444   .65686962  .6359808
+------------------------------------------------------------------------------------
+
+Drawing histogram...
 
 . * note 0.29=1/sqrt(12), the SD of the Beta(1,1) distribution
 . 
@@ -300,5 +308,5 @@ end of do-file
       name:  <unnamed>
        log:  C:\ian\git\Tailoring\samplesize calcs for supplement.log
   log type:  text
- closed on:   6 Jul 2026, 10:57:23
------------------------------------------------------------------------------------------------------
+ closed on:  27 Jul 2026, 10:59:01
+----------------------------------------------------------------------------------------------------
