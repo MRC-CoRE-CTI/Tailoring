@@ -94,7 +94,7 @@ have mean 0.8:
         prior1a(0.50 0.29) prior0a(0.50 0.29) 
         seed(3) cutoff(0.80)
 
-### Decision-based approach
+## Decision-based approach
 
 We use standard software for this using the following argument.
 
@@ -120,8 +120,7 @@ treatments A and B respectively, and suppose $p_{A} < p_{B}$. The table
 shows the probabilities of adverse outcome under various treatment
 settings.
 
-  ---
-  Treatment       |       Probability of adverse outcome|
+    Treatment       |       Probability of adverse outcome|
   |---|---|
   |Use A (perfect knowledge)    |    $$p_{A}$$|
   |Use B      |            $$p_{B}$$|
@@ -129,7 +128,6 @@ settings.
   |Trial data: use A with probability $power$ | $$power \times p_{A} + (1 - power) \times p_{B}$$ |
   |Benefit from perfect knowledge cf no data | $$1/2 \times \left( p_{A} - p_{B} \right)$$|
   |Benefit from trial data cf no data  |  $$(power - 1/2) \times \left( p_{A} - p_{B} \right)$$|
-  ---
 
 The benefit from trial data, expressed as a fraction of the benefit from
 perfect data, is therefore
@@ -164,7 +162,6 @@ three-year disease-free survival) is 50% with either treatment and
 margin is 5%. All other calculations assume the primary outcome rate is
 50% with one treatment and 55% with the other.
 
----
 | **Trial design**       | **Criterion**        | **Criterion target value**     | **Total sample size required**  | **% relative reduction in sample size**        |
 |--------------|-----------|---------|------------|----------|
 | **Standard approaches**                                                                           |
@@ -172,12 +169,11 @@ margin is 5%. All other calculations assume the primary outcome rate is
 |Superiority of NACRT over NACT OR Superiority of NACT over NACRT* | Power, one-sided alpha (1α) = 5%     | 90%              | 3414             | 19%         |
 | Non-inferiority of NACT to NACRT OR Non-inferiority of NACRT to NACT*    | Power, one-sided alpha (1α) = 5%     | 90%              | 3422             | 18%         |
 | **Novel approaches**                                                                           |
-| Frequentist | Power, two-sided alpha (2α)=20%  | 90% |2618 | 38% |
-|  | Power, two-sided alpha (2α)=40% | 90% | 1796 | 57% |
+| Frequentist | Power, two-sided alpha (2α) = 20%  | 90% |2618 | 38% |
+|  | Power, two-sided alpha (2α) = 40% | 90% | 1796 | 57% |
 | Bayesian design (non-informative prior)  | Power for 80-20 evidence (>80% probability of superiority) | 90% | 1780 | 58% |
 |  | Mean p(effective) | 80% | 564 | 87% |
 | Decision-based approach | Expected health benefit as % of possible health benefit compared with equal use of NACT and NACRT  | 80% | 654 | 84% |
----
 
 \* Assuming community agrees which of NACT/NACRT should be considered as
 reference intervention.
