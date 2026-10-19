@@ -120,7 +120,7 @@ treatments A and B respectively, and suppose $p_{A} < p_{B}$. The table
 shows the probabilities of adverse outcome under various treatment
 settings.
 
-    Treatment       |       Probability of adverse outcome|
+  |Treatment       |       Probability of adverse outcome|
   |---|---|
   |Use A (perfect knowledge)    |    $$p_{A}$$|
   |Use B      |            $$p_{B}$$|
